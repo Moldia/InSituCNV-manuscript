@@ -18,6 +18,10 @@
 **/*.png
 **/*.pdf
 **/*.csv
+**/*.json
+**/*.svg
+**/*.yaml
+
 
 # Ignore Windows system files
 Thumbs.db
