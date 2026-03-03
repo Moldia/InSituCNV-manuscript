@@ -1,0 +1,25 @@
+{
+  "N": [],
+  "A": [
+    "FGFR1",
+    "ERBB2",
+    "MECOM",
+    "ATM"
+  ],
+  "B": [
+    "FGFR1",
+    "ERBB2",
+    "MECOM",
+    "ATM",
+    "MET",
+    "SMAD4"
+  ],
+  "C": [
+    "FGFR1",
+    "ERBB2",
+    "MECOM",
+    "ATM",
+    "TBX3",
+    "RB1"
+  ]
+}

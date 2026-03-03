@@ -1,0 +1,36 @@
+{
+  "N": [],
+  "A": [
+    "MET",
+    "MDM2",
+    "TP53",
+    "NFE2L2",
+    "STK11"
+  ],
+  "B": [
+    "MET",
+    "MDM2",
+    "TP53",
+    "NFE2L2",
+    "STK11",
+    "TBX3",
+    "FGFR1",
+    "HCK",
+    "ARID1A",
+    "APC",
+    "BAP1"
+  ],
+  "C": [
+    "MET",
+    "MDM2",
+    "TP53",
+    "NFE2L2",
+    "STK11",
+    "EGFR",
+    "MYD88",
+    "MYC",
+    "ATM",
+    "SMAD4",
+    "RB1"
+  ]
+}

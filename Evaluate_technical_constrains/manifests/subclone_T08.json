@@ -1,0 +1,29 @@
+{
+  "N": [],
+  "A": [
+    "FGFR1",
+    "EGFR",
+    "DIS3",
+    "ATM"
+  ],
+  "B": [
+    "FGFR1",
+    "EGFR",
+    "DIS3",
+    "ATM",
+    "CDK4",
+    "CDKN2A",
+    "TP53"
+  ],
+  "C": [
+    "FGFR1",
+    "EGFR",
+    "DIS3",
+    "ATM",
+    "HCK",
+    "CHD7",
+    "PTEN",
+    "RB1",
+    "SMAD4"
+  ]
+}

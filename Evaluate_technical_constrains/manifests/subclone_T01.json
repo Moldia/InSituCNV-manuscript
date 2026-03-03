@@ -1,0 +1,24 @@
+{
+  "N": [],
+  "A": [
+    "MET",
+    "MYC",
+    "CDKN2A"
+  ],
+  "B": [
+    "MET",
+    "MYC",
+    "CDKN2A",
+    "CHD7",
+    "PTEN",
+    "TP53"
+  ],
+  "C": [
+    "MET",
+    "MYC",
+    "CDKN2A",
+    "PIK3CA",
+    "BAP1",
+    "NF1"
+  ]
+}

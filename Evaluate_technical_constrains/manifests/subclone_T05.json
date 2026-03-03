@@ -1,0 +1,34 @@
+{
+  "N": [],
+  "A": [
+    "ERBB2",
+    "CDK4",
+    "DIS3",
+    "MDM2",
+    "SMAD4"
+  ],
+  "B": [
+    "ERBB2",
+    "CDK4",
+    "DIS3",
+    "MDM2",
+    "SMAD4",
+    "FGFR1",
+    "CCND1",
+    "STK11",
+    "NF1",
+    "CDKN2A"
+  ],
+  "C": [
+    "ERBB2",
+    "CDK4",
+    "DIS3",
+    "MDM2",
+    "SMAD4",
+    "NFE2L2",
+    "MYD88",
+    "APC",
+    "KEAP1",
+    "ARID1A"
+  ]
+}
