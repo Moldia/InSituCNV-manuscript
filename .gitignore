@@ -17,10 +17,8 @@
 # Ignore all PNG and PDF files
 **/*.png
 **/*.pdf
-**/*.csv
-**/*.json
+#*/*.csv
 **/*.svg
-**/*.yaml
 
 
 # Ignore Windows system files
