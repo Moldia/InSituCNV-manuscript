@@ -1,0 +1,2 @@
+sample_name,wes_sample_id,insitu_file,mode,bin_size_bp,min_genes_per_bin,n_rows,wes_threshold,insitu_threshold,auc_gain,auc_loss,auc_mean,precision_gain,precision_loss,precision_mean,recall_gain,recall_loss,recall_mean,f1_gain,f1_loss,f1_mean
+1105_BL,UE-2971-1105-0,1105_BL_tumor_mean_magic.csv,binned,20000000,5,146,0.103615,0.033,0.9761904761904763,0.9781818181818183,0.9771861471861473,0.5,0.7586206896551724,0.6293103448275862,1.0,0.88,0.94,0.6666666666666666,0.8148148148148148,0.7407407407407407
