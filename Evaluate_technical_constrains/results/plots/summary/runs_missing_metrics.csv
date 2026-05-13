@@ -1,0 +1,7 @@
+run_id,template_id,count_fraction,gene_panel,status
+T02_C70_G20000,T02,70,20000,failed
+T04_C10_G5000,T04,10,5000,failed
+T06_C70_Gall,T06,70,all,failed
+T06_C20_G15000,T06,20,15000,failed
+T06_C10_G1000,T06,10,1000,failed
+T10_C50_G500,T10,50,500,failed
