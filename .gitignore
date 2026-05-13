@@ -17,10 +17,11 @@
 # Ignore all PNG and PDF files
 **/*.png
 **/*.pdf
-#*/*.csv
+#**/*.csv
 **/*.svg
 
 
 # Ignore Windows system files
 Thumbs.db
 
+Figure2/
