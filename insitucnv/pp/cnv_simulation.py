@@ -119,7 +119,15 @@ def create_cnv_template(adata, CNV_df):
 
 
 
-def simulate_cnvs(adata, cnv_template_df, subclone_dict, cell_type_reference, cell_type_cnv, alpha=2):
+def simulate_cnvs(
+    adata,
+    cnv_template_df,
+    subclone_dict,
+    cell_type_reference,
+    cell_type_cnv,
+    alpha=2,
+    subclone_probs=None,
+):
     """ 
     Simulates CNVs by uniformly scaling gene expression values to mimic gains and losses.
 
@@ -130,13 +138,18 @@ def simulate_cnvs(adata, cnv_template_df, subclone_dict, cell_type_reference, ce
         - cell_type_reference (str): Column name in adata.obs indicating cell types.
         - cell_type_cnv (str or list): Specific cell types in which CNVs should be simulated.
         - alpha (float): Maximum amplitude for scaling.
+        - subclone_probs (dict or None): Optional probabilities for assigning
+          cells to subclones, e.g. {'N':0.2,'A':0.3,'B':0.25,'C':0.25}.
+          If None, all subclones are sampled uniformly.
 
     Returns:
         - adata (AnnData): Updated AnnData with simulated CNV data in a new layer.
     """
-    # Prepare layers
-    adata.layers['CNV_simulated'] = lil_matrix(adata.layers['counts'])
-    adata.layers['CNV_GT'] = np.zeros(adata.X.shape)
+    # Prepare local matrices.
+    # AnnData layers accept CSR/CSC sparse formats, so keep LIL local for
+    # efficient assignment and convert back to CSR before storing in adata.
+    cnv_simulated = lil_matrix(adata.layers['counts'])
+    cnv_gt = np.zeros(adata.X.shape)
 
     if isinstance(cell_type_cnv, str):
         cell_type_cnv = [cell_type_cnv]
@@ -146,9 +159,18 @@ def simulate_cnvs(adata, cnv_template_df, subclone_dict, cell_type_reference, ce
     num_cells = np.sum(cell_type_mask)
     subclone_names = list(subclone_dict.keys())
 
-    adata.obs.loc[cell_type_mask, 'simulated_subclone'] = np.random.choice(
-        subclone_names, size=num_cells, replace=True
-    )
+    if subclone_probs is not None:
+        probs = np.array([subclone_probs.get(k, 0.0) for k in subclone_names], dtype=float)
+        if probs.sum() <= 0:
+            raise ValueError("`subclone_probs` sums to 0. Provide valid probabilities.")
+        probs = probs / probs.sum()
+        adata.obs.loc[cell_type_mask, 'simulated_subclone'] = np.random.choice(
+            subclone_names, size=num_cells, replace=True, p=probs
+        )
+    else:
+        adata.obs.loc[cell_type_mask, 'simulated_subclone'] = np.random.choice(
+            subclone_names, size=num_cells, replace=True
+        )
     adata.obs.loc[~cell_type_mask, 'simulated_subclone'] = "N"
 
     # Process subclones and apply CNV effects
@@ -167,21 +189,22 @@ def simulate_cnvs(adata, cnv_template_df, subclone_dict, cell_type_reference, ce
                 if effect == 0:
                     continue
 
-                values_to_modify = adata.layers['CNV_simulated'][subclone_cells, gene_idx].toarray().flatten()
+                values_to_modify = cnv_simulated[subclone_cells, gene_idx].toarray().flatten()
 
                 rho = np.random.uniform(0, alpha)
                 if effect == -1:
                     modified_values = values_to_modify / (1 + rho)
-                    adata.layers['CNV_GT'][subclone_cells, gene_idx] = -1
+                    cnv_gt[subclone_cells, gene_idx] = -1
                 elif effect == 1:
                     modified_values = values_to_modify * (1 + rho)
-                    adata.layers['CNV_GT'][subclone_cells, gene_idx] = 1
+                    cnv_gt[subclone_cells, gene_idx] = 1
 
                 # Clip and reshape
                 modified_values = np.clip(modified_values, 0, None)
-                adata.layers['CNV_simulated'][subclone_cells, gene_idx] = modified_values.reshape(-1, 1)
+                cnv_simulated[subclone_cells, gene_idx] = modified_values.reshape(-1, 1)
 
-    # Convert back to CSR format for optimized downstream use
-    adata.layers['CNV_simulated'] = csr_matrix(adata.layers['CNV_simulated'])
+    # Store back in AnnData with supported sparse format.
+    adata.layers['CNV_simulated'] = csr_matrix(cnv_simulated)
+    adata.layers['CNV_GT'] = cnv_gt
 
     return adata

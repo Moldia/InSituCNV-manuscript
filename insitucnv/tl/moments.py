@@ -1,28 +1,17 @@
-import os
 import numpy as np
-import pandas as pd
-import scanpy as sc
-import seaborn as sns
-import matplotlib.pyplot as plt
-import warnings
-import numpy as np
-from scipy.sparse import csr_matrix, issparse
-from scvelo import logging as logg
-from scvelo import settings
-from scvelo.preprocessing.neighbors import get_connectivities, get_n_neighs, neighbors, verify_neighbors
-from scvelo.preprocessing.utils import normalize_per_cell, not_yet_normalized
-import infercnvpy as cnv
-import matplotlib
 from scipy.sparse import csr_matrix
+from scvelo.preprocessing.neighbors import get_connectivities, get_n_neighs, verify_neighbors
 
 
-def smooth_data_for_cnv(data, n_neighbors=20, mode="connectivities",copy=None):
+def smooth_data_for_cnv(data, layer_w_norm_counts=None, n_neighbors=20, mode="connectivities", copy=False):
     """Smooths data for CNV inference using nearest neighbor connectivities.
 
     Parameters
     ----------
     data : :class:`~anndata.AnnData`
         Annotated data matrix.
+    layer_w_norm_counts : str or None
+        Layer name to smooth. Should be normalized but not log-transformed.
     n_neighbors : `int`, optional (default: 20)
         Number of neighbors to use for smoothing.
     mode : {'connectivities', 'distances'}, optional (default: 'connectivities')
@@ -30,18 +19,32 @@ def smooth_data_for_cnv(data, n_neighbors=20, mode="connectivities",copy=None):
 
     Returns
     -------
-    None
-        Modifies the input AnnData object in place by adding smoothed data to `adata.layers['M']`.
+    None or :class:`~anndata.AnnData`
+        Modifies the input AnnData object in place by adding smoothed data to
+        `adata.layers['M']`. If `copy=True`, returns a modified copy.
     """
 
+    adata = data.copy() if copy else data
+
     # Ensure neighbor graph is computed if required
-    if n_neighbors > get_n_neighs(data):
-        verify_neighbors(data)
+    if n_neighbors > get_n_neighs(adata):
+        verify_neighbors(adata)
 
     # Compute smoothing based on the specified mode
-    connectivities = get_connectivities(data, mode, n_neighbors=n_neighbors, recurse_neighbors=False)
-    data.layers["M"] = (
-        csr_matrix.dot(connectivities, csr_matrix(data.layers["raw"])).astype(np.float32).toarray()
+    connectivities = get_connectivities(adata, mode, n_neighbors=n_neighbors, recurse_neighbors=False)
+
+    if layer_w_norm_counts is None:
+        matrix = adata.X
+    else:
+        if layer_w_norm_counts not in adata.layers:
+            raise KeyError(
+                f"Layer '{layer_w_norm_counts}' not found in adata.layers. "
+                f"Available layers: {list(adata.layers.keys())}"
+            )
+        matrix = adata.layers[layer_w_norm_counts]
+
+    adata.layers["M"] = (
+        csr_matrix.dot(connectivities, csr_matrix(matrix)).astype(np.float32).toarray()
     )
     
     return adata if copy else None
