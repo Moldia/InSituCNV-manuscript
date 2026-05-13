@@ -1,0 +1,2 @@
+sample_name,truth_label,pred_label,n_rows,snpatho_threshold,cosmx_threshold,auc_gain,auc_loss,auc_mean,precision_gain,precision_loss,precision_mean,recall_gain,recall_loss,recall_mean,f1_gain,f1_loss,f1_mean
+CRC,snPATHOseq,CosMx_tumor,1147,0.020151,0.01843,0.9695010209958637,0.8604664014146772,0.9149837112052704,0.6170212765957447,0.05844155844155844,0.33773141751865154,0.8169014084507042,0.5625,0.6897007042253521,0.7030303030303031,0.10588235294117648,0.4044563279857398
