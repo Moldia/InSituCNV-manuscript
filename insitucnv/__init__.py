@@ -6,4 +6,4 @@ framework, remain usable in notebook environments with only a subset of the
 full stack installed.
 """
 
-__all__ = ["pl", "pp", "tl"]
+__all__ = ["pp", "tl"]
